@@ -1,8 +1,14 @@
-/// These is a Example of Using Spring Framework NOT SPRING BOOT !
-// Spring Boot is Built on Top of Spring.
-// These is same as First Example the Thing is that we don't hard code classes here
-// we use interface
-
+/// Example of using the Spring Framework (NOT Spring Boot)
+// Spring Boot is built on top of the Spring Framework.
+//
+// This example is similar to the previous one,
+// but here we avoid hard-coding a specific implementation
+// such as Laptop inside the Dev class.
+//
+// Instead, we use the Computer interface and let Spring decide
+// which implementation (Laptop or Desktop) should be injected.
+//
+// Bean configuration and dependency wiring are done in spring.xml.
 
 package com.example;
 
@@ -11,24 +17,29 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class App
 {
-    public static void main( String[] args )
+    public static void main(String[] args)
     {
 
-// Normal Manual Object Creation
-//    Dev obj = new Dev();
-//    obj.build();
+        // ---- Traditional Java Object Creation -------
+        // Dev obj = new Dev();
+        // obj.build();
 
-/// Using Spring
 
-// These Create the Spring IoC Container & Look in xml file to see which classe's object is to created ;
-// Here Application Context is an Interface so can't create obj only the classes that implements it ClassPathXmlApplicationContext();
-//  ClassPathXmlApplicationContext(); Create a xml Configuration File paste inside it
-        ApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        // ------ Using Spring Framework ------
+        // Creates the Spring IoC Container -> The container reads spring.xml -> creates the required beans -> injects dependencies -> manages Bean lifecycle
 
+        // ApplicationContext is an interface.
+        // ClassPathXmlApplicationContext is one of its implementations
+        // that loads configuration from an XML file.
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("spring.xml");
+
+        // Fetch the Dev bean from the Spring Container.
+        // Spring automatically returns the object and its dependencies.
         Dev obj = context.getBean(Dev.class);
 
-//        System.out.println(obj.getAge());
-        obj.build();
+        // System.out.println(obj.getAge());
 
-}
+        obj.build();
+    }
 }

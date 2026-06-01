@@ -1,19 +1,104 @@
-<!-- In Spring You have to Write the Configration Manaully here -->
-<!-- XML :- Extensible Markup Language :- Tags are Recognized by Browser -->
+<!-- Spring Configuration File -->
+
+<!--
+     This file tells the Spring IoC Container:
+
+     1. Which objects (beans) to create
+     2. How to create them
+     3. How dependencies should be injected
+-->
+
+<!-- XML = Extensible Markup Language -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ==========================
+         Dev Bean
+         ========================== -->
+
+    <!--
+         Spring creates an object of Dev class.
+
+         autowire="byType"
+
+         tells Spring:
+
+         "Find a bean whose type matches the type
+         of Dev's dependency and inject it automatically."
+
+         In Dev class:
+
+         private Computer com;
+
+         Spring will look for a bean that implements
+         the Computer interface and inject it using:
+
+         setCom(...)
+    -->
+    <bean id="dev"
+          class="com.example.Dev"
+          autowire="byType">
+
+        <!-- Manual Setter Injection -->
+
+        <!--
+             If autowiring was not used,
+             we could explicitly inject a dependency:
+
+             Equivalent Java code:
+
+             dev.setCom(desk1);
+        -->
+
+        <!-- <property name="com" ref="desk1"/> -->
+
+    </bean>
 
 
-   <bean id = "dev" class = "com.example.Dev" autowire="byType" >
-<!--   <property name = "com" ref="desk1"/>-->
-   </bean>
 
-    <bean id = "com" class = "com.example.Laptop" primary = "true"> </bean>
+    <!-- ==========================
+         Laptop Bean
+         ========================== -->
 
-    <bean id = "com1" class = "com.example.Desktop"> </bean>
+    <!--
+         Bean implementing Computer interface.
 
+         primary="true"
+
+         tells Spring:
+
+         "If multiple beans match the required type,
+         choose this bean by default."
+
+         Since both Laptop and Desktop implement Computer,
+         Spring needs a way to decide which one to inject.
+
+         Laptop wins because it is marked as primary.
+    -->
+    <bean id="com"
+          class="com.example.Laptop"
+          primary="true">
+    </bean>
+
+
+
+    <!-- ==========================
+         Desktop Bean
+         ========================== -->
+
+    <!--
+         Another implementation of Computer.
+
+         This bean is available inside the container,
+         but it will NOT be injected automatically
+         because Laptop is marked as primary.
+    -->
+    <bean id="com1"
+          class="com.example.Desktop">
+    </bean>
 
 </beans>

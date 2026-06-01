@@ -1,0 +1,621 @@
+    # Spring Framework (XML Configuration) - Personal Notes
+
+    ## What These Two Programs Are Teaching
+
+    Both programs demonstrate the core purpose of the Spring Framework:
+
+    > Spring creates and manages objects (Beans) and injects dependencies instead of us manually creating objects using `new`.
+
+    Both programs use:
+
+    * Spring Framework (NOT Spring Boot)
+    * XML-based Configuration (`spring.xml`)
+    * IoC Container
+    * Dependency Injection (DI)
+
+    The main difference is:
+
+    ### Program 1
+
+    Uses a concrete class directly:
+
+    ```java
+    private Laptop laptop;
+    ```
+
+    ### Program 2
+
+    Uses an interface:
+
+    ```java
+    private Computer com;
+    ```
+
+    Program 2 is the preferred Spring approach because it creates loose coupling.
+
+    ---
+
+    # Important Terms
+
+    ## Bean
+
+    Any object managed by Spring is called a Bean.
+
+    Example:
+
+    ```xml
+    <bean id="lap1" class="com.example.Laptop"/>
+    ```
+
+    Spring creates and manages the Laptop object.
+
+    ---
+
+    ## IoC Container
+
+    IoC = Inversion of Control
+
+    The Spring Container:
+
+    * Creates objects
+    * Stores objects
+    * Manages object lifecycle
+    * Injects dependencies
+
+    Created using:
+
+    ```java
+    ApplicationContext context =
+            new ClassPathXmlApplicationContext("spring.xml");
+    ```
+
+    When this line executes, Spring reads `spring.xml` and creates all configured beans.
+
+    ---
+
+    ## Dependency
+
+    A dependency is an object another object needs to perform its work.
+
+    Example from my project:
+
+    ```java
+    public class Dev {
+
+        private Laptop laptop;
+    }
+    ```
+
+    or
+
+    ```java
+    public class Dev {
+
+        private Computer com;
+    }
+    ```
+
+    Dev needs Laptop/Computer to perform compilation.
+
+    Therefore:
+
+    ```text
+    Laptop/Computer is a dependency of Dev
+    ```
+
+    ---
+
+    ## Dependency Injection (DI)
+
+    Dependency Injection means:
+
+    > An object receives its dependency from outside instead of creating it itself.
+
+    Bad approach:
+
+    ```java
+    private Laptop laptop = new Laptop();
+    ```
+
+    Good Spring approach:
+
+    ```java
+    private Laptop laptop;
+    ```
+
+    or
+
+    ```java
+    private Computer com;
+    ```
+
+    Spring creates the dependency and injects it.
+
+    ---
+
+    # Program 1 Notes
+
+    ## Classes
+
+    ```text
+    Dev
+     |
+     v
+    Laptop
+    ```
+
+    Dev directly depends on Laptop.
+
+    ```java
+    private Laptop laptop;
+    ```
+
+    ---
+
+    ## Constructor Injection
+
+    In Dev:
+
+    ```java
+    public Dev(Laptop laptop) {
+        this.laptop = laptop;
+    }
+    ```
+
+    XML:
+
+    ```xml
+    <constructor-arg ref="lap1"/>
+    ```
+
+    Equivalent Java:
+
+    ```java
+    Laptop lap = new Laptop();
+    Dev dev = new Dev(lap);
+    ```
+
+    Spring performs this automatically.
+
+    ---
+
+    ## Setter Injection
+
+    In Dev:
+
+    ```java
+    public void setLaptop(Laptop laptop) {
+        this.laptop = laptop;
+    }
+    ```
+
+    XML:
+
+    ```xml
+    <property name="laptop" ref="lap1"/>
+    ```
+
+    Equivalent Java:
+
+    ```java
+    Dev dev = new Dev();
+    dev.setLaptop(lap);
+    ```
+
+    Spring performs this automatically.
+
+    ---
+
+    ## Primitive Value Injection
+
+    Setter Injection:
+
+    ```xml
+    <property name="age" value="21"/>
+    ```
+
+    Equivalent Java:
+
+    ```java
+    dev.setAge(21);
+    ```
+
+    Constructor Injection:
+
+    ```xml
+    <constructor-arg value="50"/>
+    ```
+
+    Equivalent Java:
+
+    ```java
+    Dev dev = new Dev(50);
+    ```
+
+    ---
+
+    ## Bean Creation Flow
+
+    XML:
+
+    ```xml
+    <bean id="lap1" class="com.example.Laptop"/>
+
+    <bean id="dev" class="com.example.Dev">
+        <constructor-arg ref="lap1"/>
+    </bean>
+    ```
+
+    Spring roughly performs:
+
+    ```java
+    Laptop lap1 = new Laptop();
+
+    Dev dev = new Dev(lap1);
+    ```
+
+    and stores both inside the IoC Container.
+
+    ---
+
+    ## Limitation of Program 1
+
+    Dev depends directly on Laptop:
+
+    ```java
+    private Laptop laptop;
+    ```
+
+    If I want Desktop later:
+
+    ```java
+    private Desktop desktop;
+    ```
+
+    I must modify Java code.
+
+    This is called:
+
+    ```text
+    Tight Coupling
+    ```
+
+    ---
+
+    # Program 2 Notes
+
+    ## Classes
+
+    ```text
+    Dev
+     |
+     v
+    Computer
+     |
+     +---- Laptop
+     |
+     +---- Desktop
+    ```
+
+    Dev depends on an interface instead of a specific implementation.
+
+    ```java
+    private Computer com;
+    ```
+
+    ---
+
+    ## Why This Is Better
+
+    Dev does not care whether it receives:
+
+    ```java
+    Laptop
+    ```
+
+    or
+
+    ```java
+    Desktop
+    ```
+
+    It only needs:
+
+    ```java
+    Computer
+    ```
+
+    This creates:
+
+    ```text
+    Loose Coupling
+    ```
+
+    ---
+
+    ## Setter Injection
+
+    In Dev:
+
+    ```java
+    public void setCom(Computer com) {
+        this.com = com;
+    }
+    ```
+
+    Spring injects an object that implements Computer.
+
+    ---
+
+    ## Manual Wiring
+
+    XML:
+
+    ```xml
+    <property name="com" ref="com"/>
+    ```
+
+    Equivalent Java:
+
+    ```java
+    dev.setCom(laptop);
+    ```
+
+    ---
+
+    # Autowiring
+
+    XML:
+
+    ```xml
+    <bean id="dev"
+          class="com.example.Dev"
+          autowire="byType"/>
+    ```
+
+    Spring checks:
+
+    ```java
+    private Computer com;
+    ```
+
+    and searches for a matching bean type.
+
+    ---
+
+    ## How byType Works
+
+    Spring asks:
+
+    ```text
+    Which bean can be assigned to Computer?
+    ```
+
+    Candidates:
+
+    ```java
+    Laptop
+    Desktop
+    ```
+
+    because:
+
+    ```java
+    Laptop implements Computer
+    Desktop implements Computer
+    ```
+
+    ---
+
+    # Primary Bean
+
+    XML:
+
+    ```xml
+    <bean id="com"
+          class="com.example.Laptop"
+          primary="true"/>
+    ```
+
+    Meaning:
+
+    ```text
+    If multiple beans match the required type,
+    choose this bean by default.
+    ```
+
+    ---
+
+    Without Primary
+
+    Spring finds:
+
+    ```java
+    Laptop
+    Desktop
+    ```
+
+    and gets confused.
+
+    Result:
+
+    ```text
+    NoUniqueBeanDefinitionException
+    ```
+
+    because multiple beans match the type Computer.
+
+    ---
+
+    With Primary
+
+    Spring automatically chooses:
+
+    ```java
+    Laptop
+    ```
+
+    and performs:
+
+    ```java
+    dev.setCom(laptop);
+    ```
+
+    ---
+
+    # What Happens When ApplicationContext Is Created
+
+    Code:
+
+    ```java
+    ApplicationContext context =
+            new ClassPathXmlApplicationContext("spring.xml");
+    ```
+
+    Spring:
+
+    ### Program 1
+
+    ```java
+    Laptop lap1 = new Laptop();
+
+    Dev dev = new Dev(lap1);
+
+    Dev dev1 = new Dev();
+    ```
+
+    ---
+
+    ### Program 2
+
+    ```java
+    Laptop laptop = new Laptop();
+
+    Desktop desktop = new Desktop();
+
+    Dev dev = new Dev();
+
+    dev.setCom(laptop);
+    ```
+
+    because Laptop is marked as primary.
+
+    ---
+
+    # getBean()
+
+    Code:
+
+    ```java
+    Dev obj = context.getBean(Dev.class);
+    ```
+
+    or
+
+    ```java
+    Dev obj = (Dev) context.getBean("dev");
+    ```
+
+    Spring DOES NOT create a new object.
+
+    It simply returns the bean already stored in the container.
+
+    ---
+
+    # Most Important Interview-Level Concepts
+
+    ## IoC (Inversion of Control)
+
+    Normally:
+
+    ```java
+    Dev dev = new Dev();
+    Laptop lap = new Laptop();
+    ```
+
+    Developer controls object creation.
+
+    With Spring:
+
+    ```java
+    ApplicationContext context =
+            new ClassPathXmlApplicationContext("spring.xml");
+    ```
+
+    Spring controls object creation.
+
+    Control is inverted from programmer to Spring.
+
+    ---
+
+    ## Dependency Injection
+
+    Object receives dependency from outside.
+
+    Example:
+
+    ```java
+    dev.setCom(laptop);
+    ```
+
+    or
+
+    ```java
+    new Dev(laptop);
+    ```
+
+    Spring performs this automatically.
+
+    ---
+
+    ## Tight Coupling
+
+    ```java
+    private Laptop laptop;
+    ```
+
+    Dependent on a specific implementation.
+
+    Example 1.
+
+    ---
+
+    ## Loose Coupling
+
+    ```java
+    private Computer com;
+    ```
+
+    Dependent on an abstraction (interface).
+
+    Example 2.
+
+    Preferred Spring design.
+
+    ---
+
+    # Final Summary
+
+    Program 1 teaches:
+
+    * Bean Creation
+    * XML Configuration
+    * Constructor Injection
+    * Setter Injection
+    * Primitive Value Injection
+    * IoC Container
+
+    Program 2 teaches:
+
+    * Interface-Based Design
+    * Loose Coupling
+    * Dependency Injection
+    * Autowiring
+    * Primary Beans
+    * Real-World Spring Design
+
+    The biggest lesson from both programs:
+
+    > Don't create dependencies inside the class. Let Spring create them and inject them.
+
+    That is the foundation of the Spring Framework.

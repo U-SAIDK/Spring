@@ -1,28 +1,97 @@
-<!-- In Spring You have to Write the Configration Manaully here -->
-<!-- XML :- Extensible Markup Language :- Tags are Recognized by Browser -->
+<!-- Spring Configuration File -->
+<!-- This file tells the Spring Container:
+     1. Which objects (beans) to create
+     2. How to create them
+     3. How to connect dependencies between them -->
+
+<!-- XML = Extensible Markup Language -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- bean definitions here -->
-<!--id here is just an alias of class -->
-<!--Can Create Mutiple Object of Same OR Diff Classes -->
-<bean id = "dev" class = "com.example.Dev">
-<!--<property name = "laptop" ref="lap1"/> &lt;!&ndash; Setter laptop&ndash;&gt;-->
-<constructor-arg ref="lap1" />
+    <!-- ==========================
+         Dev Bean
+         ========================== -->
+
+    <!--
+        id    = Unique name (alias) used to fetch the bean
+        class = Fully qualified class name
+
+        Spring creates an object of Dev class and
+        stores it inside the IoC Container.
+    -->
+    <bean id="dev" class="com.example.Dev">
+
+        <!-- Constructor Injection -->
+
+        <!--
+            Spring first creates the lap1 bean,
+            then passes it into the Dev(Laptop laptop)
+            constructor.
+
+            Equivalent Java code:
+
+            Laptop lap = new Laptop();
+            Dev dev = new Dev(lap);
+        -->
+        <constructor-arg ref="lap1"/>
+
+        <!-- Setter Injection Example -->
+
+        <!--
+        Equivalent Java code:
+
+        Dev dev = new Dev();
+        dev.setLaptop(lap1);
+        -->
+        <!-- <property name="laptop" ref="lap1"/> -->
 
 
-<!--<property name="age" value="21"> </property> &lt;!&ndash; Setter Injection values&ndash;&gt;-->
-<!--    <constructor-arg value="50"> </constructor-arg> &lt;!&ndash;Constructor Injection values &ndash;&gt;-->
 
-</bean> <!-- Create 1st Object of Dev & Using Property & constructor-arg you can change value of age too-->
+        <!-- Primitive Value Injection -->
 
-<bean id = "dev1" class = "com.example.Dev"> </bean> <!-- Create 2nd Object of Dev-->
+        <!--
+        Setter Injection Example
 
-<bean id = "lap1" class = "com.example.Laptop"> </bean> <!-- Create an Object of Laptop-->
+        Equivalent Java code:
+
+        dev.setAge(21);
+        -->
+        <!-- <property name="age" value="21"/> -->
 
 
+
+        <!-- Constructor Injection Example -->
+
+        <!--
+        Equivalent Java code:
+
+        Dev dev = new Dev(50);
+        -->
+        <!-- <constructor-arg value="50"/> -->
+
+    </bean>
+
+
+
+    <!--
+        Another Dev bean.
+        Spring allows multiple objects of the same class.Each bean has a unique id.
+    -->
+    <bean id="dev1" class="com.example.Dev"/>
+
+
+
+    <!--
+        Laptop Bean
+        Spring creates and manages this object.
+
+        Equivalent Java code:
+        Laptop lap1 = new Laptop();
+    -->
+    <bean id="lap1" class="com.example.Laptop"/>
 
 </beans>

@@ -2,13 +2,13 @@ package com.example;
 
 public class Laptop implements Computer {
 
-public Laptop(){
-//  These will run only when object is created of these class
-    System.out.println("Laptop Constructor");
-}
+    // Constructor executes whenever
+    // a Laptop bean/object is created.
+    public Laptop() {
+        System.out.println("Laptop Constructor");
+    }
 
-
-public void compile(){
-     System.out.println("Compiling in Laptop  ");
-}
+    public void compile() {
+        System.out.println("Compiling in Laptop");
+    }
 }

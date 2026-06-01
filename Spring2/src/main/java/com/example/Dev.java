@@ -2,24 +2,41 @@ package com.example;
 
 public class Dev {
 
-   private Computer com;
+    // Dependency of Dev class.
+    // Notice that we are using the interface type instead of a concrete class such as Laptop or Desktop.
+    // This makes the class loosely coupled.
+    // Spring can inject Laptop, Desktop, or any future Computer implementation.
+    private Computer com;
 
+    // Executes when the Dev bean is created.
+    public Dev() {
+        System.out.println("This is Dev Container");
+    }
 
-// These will run only when object is created of Dev Class
-public Dev(){System.out.println("These is Dev Container ");}
+    // ----------------------------------
+    // Getter & Setter Injection
+    // ----------------------------------
 
-/// Getter & Setters for Both Laptop & Desktop(Computer Interface)
- public Computer getCom() {
+    // Getter for Computer dependency
+    public Computer getCom() {
         return com;
     }
 
- public void setCom(Computer com) {
+    // Spring uses this setter method
+    // to inject the required Computer bean.
+    public void setCom(Computer com) {
         this.com = com;
     }
 
-    public void build(){
-     System.out.println("Working on Awesome Project");
-     com.compile();
-}
+    // Business Method
+    public void build() {
 
+        System.out.println("Working on Awesome Project");
+
+        // Dev does not know whether it received a Laptop or Desktop.
+        // The entire config is in spring.xml which takes care of it
+        // It simply calls the compile() method
+        // defined by the Computer interface.
+        com.compile();
+    }
 }

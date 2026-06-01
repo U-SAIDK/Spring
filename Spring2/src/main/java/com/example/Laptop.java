@@ -2,13 +2,14 @@ package com.example;
 
 public class Laptop implements Computer {
 
-public Laptop(){
-//  These will run only when object is created of these class
-    System.out.println("Laptop Constructor");
-}
+    // Constructor executes when
+    // Spring creates a Laptop bean.
+    public Laptop() {
+        System.out.println("Laptop Constructor");
+    }
 
-
-public void compile(){
-     System.out.println("Compiling in Laptop  ");
-}
+    @Override
+    public void compile() {
+        System.out.println("Compiling in Laptop");
+    }
 }
