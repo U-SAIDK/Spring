@@ -1,0 +1,28 @@
+<!-- In Spring You have to Write the Configration Manaully here -->
+<!-- XML :- Extensible Markup Language :- Tags are Recognized by Browser -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+<!--id here is just an alias of class -->
+<!--Can Create Mutiple Object of Same OR Diff Classes -->
+<bean id = "dev" class = "com.example.Dev">
+<!--<property name = "laptop" ref="lap1"/> &lt;!&ndash; Setter laptop&ndash;&gt;-->
+<constructor-arg ref="lap1" />
+
+
+<!--<property name="age" value="21"> </property> &lt;!&ndash; Setter Injection values&ndash;&gt;-->
+<!--    <constructor-arg value="50"> </constructor-arg> &lt;!&ndash;Constructor Injection values &ndash;&gt;-->
+
+</bean> <!-- Create 1st Object of Dev & Using Property & constructor-arg you can change value of age too-->
+
+<bean id = "dev1" class = "com.example.Dev"> </bean> <!-- Create 2nd Object of Dev-->
+
+<bean id = "lap1" class = "com.example.Laptop"> </bean> <!-- Create an Object of Laptop-->
+
+
+
+</beans>

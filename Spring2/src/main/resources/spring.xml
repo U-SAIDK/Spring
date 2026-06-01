@@ -1,0 +1,19 @@
+<!-- In Spring You have to Write the Configration Manaully here -->
+<!-- XML :- Extensible Markup Language :- Tags are Recognized by Browser -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+   <bean id = "dev" class = "com.example.Dev" autowire="byType" >
+<!--   <property name = "com" ref="desk1"/>-->
+   </bean>
+
+    <bean id = "com" class = "com.example.Laptop" primary = "true"> </bean>
+
+    <bean id = "com1" class = "com.example.Desktop"> </bean>
+
+
+</beans>
